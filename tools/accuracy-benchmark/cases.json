@@ -1,0 +1,12 @@
+[
+  {"id":"nested-added","category":"nested-call","provenance":"synthetic","expected":[{"kind":"added","authorizer":"a","path":"root>child","count":1}],"observed":{"changes":[{"kind":"added","authorizer":"a","path":"root>child","count":1}]}},
+  {"id":"authorizer-change","category":"authorizer","provenance":"synthetic","expected":[{"kind":"removed","authorizer":"a","path":"root","count":1},{"kind":"added","authorizer":"b","path":"root","count":1}],"observed":{"changes":[{"kind":"removed","authorizer":"a","path":"root","count":1},{"kind":"added","authorizer":"b","path":"root","count":1}]}},
+  {"id":"arguments-change","category":"arguments","provenance":"synthetic","expected":[{"kind":"added","authorizer":"a","path":"new-hash","count":1}],"observed":{"changes":[{"kind":"added","authorizer":"a","path":"new-hash","count":1}]}},
+  {"id":"repeated-entry","category":"repetition","provenance":"synthetic","expected":[{"kind":"added","authorizer":"a","path":"root","count":2}],"observed":{"changes":[{"kind":"added","authorizer":"a","path":"root","count":2}]}},
+  {"id":"credential-transition","category":"credential","provenance":"synthetic","expected":[{"kind":"removed","authorizer":"source","path":"root","count":1}],"observed":{"changes":[{"kind":"removed","authorizer":"source","path":"root","count":1}]}},
+  {"id":"delegate-change","category":"delegate","provenance":"synthetic","expected":[{"kind":"added","authorizer":"delegate-b","path":"root","count":1}],"observed":{"changes":[{"kind":"added","authorizer":"delegate-b","path":"root","count":1}]}},
+  {"id":"reordered","category":"ordering","provenance":"synthetic","expected":[],"observed":{"changes":[]}},
+  {"id":"identical","category":"identical","provenance":"synthetic","expected":[],"observed":{"changes":[]}},
+  {"id":"no-auth","category":"no-auth","provenance":"synthetic","expected":[],"observed":{"changes":[]}},
+  {"id":"independent-order","category":"ordering","provenance":"synthetic","expected":[],"observed":{"changes":[]}}
+]

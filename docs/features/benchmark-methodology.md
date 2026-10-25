@@ -1,0 +1,5 @@
+# Labeled accuracy benchmark
+
+Run `node tools/accuracy-benchmark/run.mjs tools/accuracy-benchmark/cases.json` after installation. The runner consumes saved comparison JSON observations paired with manually labeled expected changes. It matches `(kind, authorizer, path)` with multiset counts and reports TP, FP, FN, and TN (an entirely unchanged comparison), plus precision `TP/(TP+FP)` and recall `TP/(TP+FN)`; undefined denominators are `null`.
+
+The supplied ten cases are **synthetic**, including four intentionally unchanged patterns. Their observations are fixed illustrative data, not fresh CLI execution, independently verified ground truth, recorded testnet simulations, or evidence of real-world accuracy. Categories include nested calls, authorizers, arguments, repeated entries, credential changes, delegates, ordering and no-auth cases. Results split by provenance/category so recorded cases cannot silently merge into synthetic metrics. To claim accuracy outside this fixture, manually audit independent real simulations, label expected paths before observing outputs, document sampling, and review ambiguous authorizations with a human security reviewer.
