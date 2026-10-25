@@ -1,0 +1,17 @@
+{
+  "name": "@soraforge/soroban-authscope",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Offline Soroban authorization tree inspection and change detection",
+  "type": "module",
+  "bin": {"authscope": "./dist/cli.js"},
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test tests/*.test.mjs"
+  },
+  "dependencies": {"@stellar/stellar-sdk": "17.2.1"},
+  "devDependencies": {"typescript": "5.8.3", "@types/node": "22.15.29"},
+  "license": "Apache-2.0"
+}
