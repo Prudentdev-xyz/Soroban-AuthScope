@@ -15,7 +15,7 @@ Requires Node.js 22+ and npm.
 ```bash
 git clone https://github.com/SoraForge/Soroban-AuthScope.git
 cd Soroban-AuthScope
-npm install --ignore-scripts
+npm ci --ignore-scripts
 npm test
 node dist/cli.js --help
 node dist/cli.js inspect ./simulation.json
