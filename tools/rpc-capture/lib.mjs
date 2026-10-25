@@ -93,16 +93,18 @@ export async function postPinnedRpc(url, payload, {
         return;
       }
       const chunks = [];
-      let count = 0;
+      let count = 0, oversized = false;
       response.on("data", chunk => {
         count += chunk.length;
         if (count > MAX_RPC_BYTES) {
+          oversized = true;
           req.destroy(Error("RPC response exceeds 1 MiB limit"));
           return;
         }
         chunks.push(chunk);
       });
       response.on("end", () => {
+        if (oversized) { reject(Error("RPC response exceeds 1 MiB limit")); return; }
         try {
           const text = new TextDecoder("utf-8", { fatal: true }).decode(Buffer.concat(chunks));
           resolve(JSON.parse(text));
