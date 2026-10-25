@@ -22,3 +22,16 @@ jobs:
         run: npm test
       - name: Build and smoke-test non-root Docker image
         run: bash deploy/docker/smoke.sh
+      - name: Generate synthetic input for composite Action checks
+        run: node examples/authscope-lab/generate.mjs ./examples/authscope-lab/generated
+      - name: Exercise real composite action with unchanged scope
+        uses: ./integrations/github-actions
+        with:
+          before: examples/authscope-lab/generated/before.json
+          after: examples/authscope-lab/generated/unchanged.json
+      - name: Exercise real composite action with advisory changed scope
+        uses: ./integrations/github-actions
+        with:
+          before: examples/authscope-lab/generated/before.json
+          after: examples/authscope-lab/generated/after.json
+          fail-on-change: "false"
