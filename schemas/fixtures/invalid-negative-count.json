@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "changed": true,
+  "beforeCount": 0,
+  "afterCount": 1,
+  "changes": [
+    { "kind": "added", "authorizer": "identity", "path": "invocation", "count": -1 }
+  ]
+}

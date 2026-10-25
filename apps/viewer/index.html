@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Soroban AuthScope — Offline Viewer</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar"><span class="mark" aria-hidden="true">◈</span><span>Soroban <strong>AuthScope</strong></span><span class="offline">● Offline / Read-only</span></header>
+  <main>
+    <div class="intro">
+      <p class="eyebrow">LOCAL REPORT INSPECTOR</p>
+      <h1>Authorization, made visible.</h1>
+      <p class="lead">Explore saved inspection trees and compare authorization scope side by side. Your JSON stays on this device.</p>
+    </div>
+    <section class="import-panel" aria-labelledby="import-heading">
+      <div class="panel-heading"><h2 id="import-heading">Load your reports</h2><button id="clear" type="button">Clear files</button></div>
+      <div class="inputs">
+        <div class="file-field"><label for="before-file"><span class="field-index">01</span> Before snapshot <span class="optional">optional</span></label><input id="before-file" type="file" accept=".json,application/json" aria-describedby="file-help"><small id="before-status">No file selected</small></div>
+        <div class="file-field"><label for="after-file"><span class="field-index">02</span> After snapshot <span class="optional">optional</span></label><input id="after-file" type="file" accept=".json,application/json" aria-describedby="file-help"><small id="after-status">No file selected</small></div>
+        <div class="file-field"><label for="diff-file"><span class="field-index">03</span> Comparison <span class="optional">optional</span></label><input id="diff-file" type="file" accept=".json,application/json" aria-describedby="file-help"><small id="diff-status">No file selected</small></div>
+      </div>
+      <p class="help" id="file-help">Select one or more AuthScope v1 JSON reports, maximum 4 MiB each. Load both snapshots to calculate a local diff, or load a saved comparison by itself. No files are sent anywhere.</p>
+      <p id="error" role="alert" hidden></p>
+    </section>
+    <div class="results-heading"><h2>Scope analysis</h2><p id="status" role="status" aria-live="polite">Awaiting local JSON reports</p></div>
+    <section id="overview" aria-label="Comparison overview"></section>
+    <div id="tree-grid" class="tree-grid" aria-label="Authorization trees"></div>
+    <section id="changes" aria-label="Scope differences"></section>
+    <footer>Scope changes need human review. This viewer does not verify signatures, transaction validity, or security impact.</footer>
+  </main>
+</body>
+</html>
