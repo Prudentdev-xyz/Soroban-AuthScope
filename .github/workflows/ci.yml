@@ -20,3 +20,5 @@ jobs:
         run: npm run check
       - name: Test CLI and XDR parser
         run: npm test
+      - name: Build and smoke-test non-root Docker image
+        run: bash deploy/docker/smoke.sh
