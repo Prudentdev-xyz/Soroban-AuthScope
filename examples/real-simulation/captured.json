@@ -1,0 +1,23 @@
+{
+  "provenance": {
+    "kind": "live-testnet-simulation",
+    "capturedAt": "2026-10-25T06:43:34.176Z",
+    "network": "Stellar Testnet",
+    "rpc": "https://soroban-testnet.stellar.org",
+    "contract": "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
+    "function": "transfer",
+    "sdk": "@stellar/stellar-sdk 17.2.1",
+    "source": "public-testnet-account",
+    "protocolVersion": 29,
+    "resultLedger": 5377405
+  },
+  "result": {
+    "results": [
+      {
+        "auth": [
+          "AAAAAAAAAAAAAAAB15KLcsJwPM/q9+uf9O9NUEpVqLl5/JtFDqLIQrTRzmEAAAAIdHJhbnNmZXIAAAADAAAAEgAAAAAAAAAACQ6ijYTtv12QL5kdVsp5tpcXyFEMAekw86jVTpUIEE4AAAASAAAAAAAAAAAJDqKNhO2/XZAvmR1Wynm2lxfIUQwB6TDzqNVOlQgQTgAAAAoAAAAAAAAAAAAAAAAAAAABAAAAAA=="
+        ]
+      }
+    ]
+  }
+}
