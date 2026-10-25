@@ -1,7 +1,7 @@
 name: Build and test
 on:
   push:
-    branches: [main]
+    branches: [main, "feat/**"]
   pull_request:
 permissions:
   contents: read
@@ -13,9 +13,25 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
       - name: Install pinned dependencies, no lifecycle scripts
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Type-check
         run: npm run check
       - name: Test CLI and XDR parser
         run: npm test
+      - name: Build and smoke-test non-root Docker image
+        run: bash deploy/docker/smoke.sh
+      - name: Generate synthetic input for composite Action checks
+        run: node examples/authscope-lab/generate.mjs ./examples/authscope-lab/generated
+      - name: Exercise real composite action with unchanged scope
+        uses: ./integrations/github-actions
+        with:
+          before: examples/authscope-lab/generated/before.json
+          after: examples/authscope-lab/generated/unchanged.json
+      - name: Exercise real composite action with advisory changed scope
+        uses: ./integrations/github-actions
+        with:
+          before: examples/authscope-lab/generated/before.json
+          after: examples/authscope-lab/generated/after.json
+          fail-on-change: "false"

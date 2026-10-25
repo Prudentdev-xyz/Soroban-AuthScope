@@ -1,0 +1,44 @@
+name: Soroban AuthScope
+description: Offline authorization scope regression check between two saved JSON snapshots
+inputs:
+  before:
+    description: Baseline snapshot path relative to checked-out workspace
+    required: true
+  after:
+    description: Candidate snapshot path relative to checked-out workspace
+    required: true
+  fail-on-change:
+    description: Fail when authorization scope changed (true or false)
+    required: false
+    default: "true"
+outputs:
+  changed:
+    description: Whether scope changed
+    value: ${{ steps.diff.outputs.changed }}
+  additions:
+    description: Count of added call paths
+    value: ${{ steps.diff.outputs.additions }}
+  removals:
+    description: Count of removed call paths
+    value: ${{ steps.diff.outputs.removals }}
+  report-path:
+    description: Path to local JSON report for optional explicit artifact upload
+    value: ${{ steps.diff.outputs.report-path }}
+runs:
+  using: composite
+  steps:
+    - id: diff
+      shell: bash
+      name: Compare authorization scopes (offline)
+      env:
+        AUTHSCOPE_ACTION_ROOT: ${{ github.action_path }}
+        AUTHSCOPE_WORKSPACE: ${{ github.workspace }}
+        AUTHSCOPE_BEFORE: ${{ inputs.before }}
+        AUTHSCOPE_AFTER: ${{ inputs.after }}
+        AUTHSCOPE_FAIL_ON_CHANGE: ${{ inputs.fail-on-change }}
+      run: |
+        set -euo pipefail
+        root="$(cd "$AUTHSCOPE_ACTION_ROOT/../.." && pwd)"
+        npm ci --prefix "$root" --ignore-scripts --no-audit --no-fund
+        npm run build --prefix "$root"
+        node "$AUTHSCOPE_ACTION_ROOT/scripts/check.mjs"

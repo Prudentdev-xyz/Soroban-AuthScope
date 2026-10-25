@@ -49,3 +49,12 @@ Supported input: a JSON array of base64 `SorobanAuthorizationEntry` XDR strings,
 ## Governance
 
 Apache-2.0 licensed. Dependency upgrades are manual; no Dependabot is configured. This project has not been approved for Drips Wave.
+
+## Additional developer workflows
+
+- [Reusable GitHub Actions regression check](docs/features/github-actions.md) — compare checked-in authorization snapshots in CI without any wallet or RPC access.
+- [Optional read-only RPC simulation capture](docs/features/opt-in-capture.md) — explicitly network-enabled testnet capture with DNS and response-size safeguards.
+- [Non-root Docker packaging](docs/features/docker.md) — run the CLI with no runtime network and read-only mounts.
+- [First authorization learning lab](docs/tutorials/first-inspection.md) — generate reproducible synthetic Stellar SDK XDR and exercise inspection and comparison.
+
+These additions are separate from the offline core; the capture tool requires explicit consent to access RPC.
