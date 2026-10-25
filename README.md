@@ -35,6 +35,10 @@ Supported input: a JSON array of base64 `SorobanAuthorizationEntry` XDR strings,
 - `src/cli.ts`: offline local-file CLI with text/JSON output and controlled exit statuses.
 - `src/index.ts`: public TypeScript APIs.
 - `tests/core.test.mjs`: end-to-end XDR fixtures constructed using the official SDK.
+- `src/features/simulation-normalizer/`: strict raw RPC and SDK-shaped simulation adapter ([supported input structures](docs/features/simulation-inputs.md)).
+- `src/features/scope-fingerprint/`: deterministic canonical comparison oracle ([semantics](docs/features/comparison-semantics.md)).
+- [Credential variants and delegated signer trees](docs/features/credentials.md).
+- [Real public Testnet simulation fixture and offline smoke test](docs/features/real-world-validation.md).
 
 ## References
 

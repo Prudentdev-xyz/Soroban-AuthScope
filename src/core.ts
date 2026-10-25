@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { Address, xdr } from "@stellar/stellar-sdk";
+import { normalizeSimulation } from "./features/simulation-normalizer/index.js";
 
 /** Read-only, offline summaries. Signatures, nonces and raw args never appear in reports. */
 export interface Invocation {
@@ -13,8 +14,11 @@ export interface Authorization {
   credential: string;
   authorizer: string;
   delegates: string[];
+  /** Hierarchical signers, absent only in snapshots written before this field existed. */
+  delegateTree?: DelegateSigner[];
   root: Invocation;
 }
+export interface DelegateSigner { address: string; children: DelegateSigner[] }
 export interface Snapshot {
   schemaVersion: 1;
   authorizationCount: number;
@@ -76,11 +80,18 @@ function tree(node: xdr.SorobanAuthorizedInvocation, depth: number, counter: { n
     children: node.subInvocations.map(child => tree(child, depth + 1, counter))
   };
 }
-function signerTree(value: xdr.SorobanDelegateSignature, depth: number, counter: { n: number }): string[] {
+function signerTree(value: xdr.SorobanDelegateSignature, depth: number, counter: { n: number }): DelegateSigner {
   counter.n++;
   if (depth > MAX_DEPTH || counter.n > MAX_NODES) throw Error("Delegate tree exceeds safety limits");
-  return [addr(value.address),
-    ...value.nestedDelegates.flatMap(next => signerTree(next, depth + 1, counter))];
+  return { address: addr(value.address),
+    children: value.nestedDelegates.map(next => signerTree(next, depth + 1, counter)) };
+}
+function flattenSigner(value: DelegateSigner): string[] {
+  return [value.address, ...value.children.flatMap(flattenSigner)];
+}
+function canonicalSigners(values: DelegateSigner[]): unknown[] {
+  return values.map(value => [value.address, canonicalSigners(value.children)])
+    .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
 }
 function parseBase64(text: string): Authorization {
   if (text.length > Math.ceil(MAX_ENTRY_BYTES / 3) * 4 + 8 ||
@@ -97,6 +108,7 @@ function parseBase64(text: string): Authorization {
   const credential = entry.credentials;
   let authorizer = "transaction source";
   let delegates: string[] = [];
+  let delegateTree: DelegateSigner[] = [];
   if (credential.type === "sorobanCredentialsAddress" ||
       credential.type === "sorobanCredentialsAddressV2") {
     authorizer = addr((credential.value as xdr.SorobanAddressCredentials).address);
@@ -104,41 +116,20 @@ function parseBase64(text: string): Authorization {
     const value = credential.value as xdr.SorobanAddressCredentialsWithDelegates;
     authorizer = addr(value.addressCredentials.address);
     const counter = { n: 0 };
-    delegates = value.delegates.flatMap(d => signerTree(d, 0, counter));
+    delegateTree = value.delegates.map(d => signerTree(d, 0, counter));
+    delegates = delegateTree.flatMap(flattenSigner);
   } else if (credential.type !== "sorobanCredentialsSourceAccount") {
     throw Error("Unsupported SorobanCredentials variant");
   }
   return {
-    credential: credential.type, authorizer, delegates,
+    credential: credential.type, authorizer, delegates, delegateTree,
     root: tree(entry.rootInvocation, 0, { n: 0 })
   };
 }
 export function extractAuth(input: unknown): string[] {
-  let value = input;
-  if (value && typeof value === "object" && !Array.isArray(value) && "result" in value) {
-    value = (value as { result: unknown }).result;
-  }
-  let entries: unknown;
-  if (Array.isArray(value)) entries = value;
-  else if (value && typeof value === "object") {
-    const object = value as Record<string, unknown>;
-    if (object.error != null) throw Error("Simulation has an error; no authorization conclusion");
-    if (Array.isArray(object.auth)) entries = object.auth;
-    else if (Array.isArray(object.results)) {
-      entries = object.results.flatMap(result => {
-        const resultObj = result as { auth?: unknown } | null;
-        if (!resultObj || !Array.isArray(resultObj.auth)) {
-          throw Error("Simulation results entry has no auth array");
-        }
-        return resultObj.auth;
-      });
-    } else throw Error("Expected an auth array or simulation results");
-  } else throw Error("Expected JSON authorization input");
-  if (!Array.isArray(entries) || entries.length > MAX_ENTRIES ||
-      entries.some(x => typeof x !== "string")) {
-    throw Error("Expected no more than 128 base64 authorization entries");
-  }
-  return entries as string[];
+  const entries = normalizeSimulation(input).authorizations;
+  if (entries.length > MAX_ENTRIES) throw Error("Too many authorization entries");
+  return entries;
 }
 export function inspect(input: unknown): Snapshot {
   const data = extractAuth(input);
@@ -147,7 +138,8 @@ export function inspect(input: unknown): Snapshot {
 function count(snapshot: Snapshot): Map<string, { authorizer: string; path: string; total: number }> {
   const map = new Map<string, { authorizer: string; path: string; total: number }>();
   for (const entry of snapshot.entries) {
-    const identity = JSON.stringify([entry.credential, entry.authorizer, [...entry.delegates].sort()]);
+    const identity = JSON.stringify([entry.credential, entry.authorizer,
+      entry.delegateTree === undefined ? [...entry.delegates].sort() : canonicalSigners(entry.delegateTree)]);
     function visit(node: Invocation, ancestors: readonly string[]): void {
       const step = JSON.stringify([node.kind, node.contract, node.method, node.argumentsSha256]);
       const path = [...ancestors, step];
