@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SoraForge/Soroban-AuthScope/blob/main/schemas/v1/snapshot.schema.json",
+  "title": "AuthScope Snapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "authorizationCount", "entries"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "authorizationCount": { "type": "integer", "minimum": 0, "maximum": 128 },
+    "entries": { "type": "array", "maxItems": 128, "items": { "$ref": "#/$defs/authorization" } }
+  },
+  "$defs": {
+    "authorization": {
+      "type": "object", "additionalProperties": false,
+      "required": ["credential", "authorizer", "delegates", "root"],
+      "properties": {
+        "credential": { "enum": ["sorobanCredentialsSourceAccount", "sorobanCredentialsAddress", "sorobanCredentialsAddressV2", "sorobanCredentialsAddressWithDelegates"] },
+        "authorizer": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "delegates": { "type": "array", "maxItems": 2000, "items": { "type": "string", "minLength": 1, "maxLength": 256 } },
+        "delegateTree": { "type": "array", "maxItems": 2000, "items": { "$ref": "#/$defs/delegateSigner" } },
+        "root": { "$ref": "#/$defs/invocation" }
+      }
+    },
+    "delegateSigner": {
+      "type": "object", "additionalProperties": false,
+      "required": ["address", "children"],
+      "properties": {
+        "address": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "children": { "type": "array", "maxItems": 2000, "items": { "$ref": "#/$defs/delegateSigner" } }
+      }
+    },
+    "invocation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "contract", "method", "argumentsSha256", "children"],
+      "properties": {
+        "kind": { "enum": ["contract", "createContract", "createContractV2"] },
+        "contract": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "method": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "argumentsSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "children": { "type": "array", "maxItems": 2000, "items": { "$ref": "#/$defs/invocation" } }
+      }
+    }
+  }
+}

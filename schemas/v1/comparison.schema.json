@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SoraForge/Soroban-AuthScope/blob/main/schemas/v1/comparison.schema.json",
+  "title": "AuthScope Comparison v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "changed", "beforeCount", "afterCount", "changes"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "changed": { "type": "boolean" },
+    "beforeCount": { "type": "integer", "minimum": 0, "maximum": 128 },
+    "afterCount": { "type": "integer", "minimum": 0, "maximum": 128 },
+    "changes": {
+      "type": "array", "maxItems": 50000,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["kind", "authorizer", "path", "count"],
+        "properties": {
+          "kind": { "enum": ["added", "removed"] },
+          "authorizer": { "type": "string", "minLength": 1, "maxLength": 262144 },
+          "path": { "type": "string", "minLength": 1, "maxLength": 32768 },
+          "count": { "type": "integer", "minimum": 1 }
+        }
+      }
+    }
+  }
+}

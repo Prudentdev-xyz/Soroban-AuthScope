@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "changed": true,
+  "beforeCount": 0,
+  "afterCount": 1,
+  "changes": [
+    {
+      "kind": "added",
+      "authorizer": "[\"sorobanCredentialsSourceAccount\",\"transaction source\",[]]",
+      "path": "[\"contract\",\"CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR\",\"approve\",\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]",
+      "count": 1
+    }
+  ]
+}

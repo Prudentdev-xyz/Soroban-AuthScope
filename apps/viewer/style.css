@@ -1,0 +1,59 @@
+:root { font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; color: #13252e; background:#f4f6f4; font-synthesis:none; }
+* {box-sizing:border-box}
+body {margin:0; line-height:1.5}
+.topbar {height:66px; padding:0 max(24px, calc((100vw - 1140px)/2)); display:flex; align-items:center; gap:10px; border-bottom:1px solid #dce4df; background:#fff; font-size:15px; letter-spacing:-.02em}
+.mark {display:grid; place-items:center; width:31px; height:31px; border-radius:8px; background:#1c5b50; color:white; font-size:22px}
+.offline {margin-left:auto; color:#277262; font-size:12px; font-weight:700; letter-spacing:.02em; white-space:nowrap}
+main {max-width:1188px; margin:0 auto; padding:64px 24px 40px}
+.intro {max-width:720px; margin-bottom:34px}
+.eyebrow {color:#337466; font-size:12px; font-weight:800; letter-spacing:.15em; margin:0 0 14px}
+h1 {font-size:clamp(33px,5vw,56px); letter-spacing:-.052em; line-height:1.12; margin:0 0 17px; font-weight:760}
+.lead {font-size:17px; color:#596b68; line-height:1.75; margin:0}
+h2 {font-size:20px; letter-spacing:-.025em; margin:0}
+.import-panel,.tree-panel,.diff-panel,.metric,.empty {background:#fff; border:1px solid #dce4df; border-radius:14px; box-shadow:0 3px 14px #13342b06}
+.import-panel {padding:28px; margin-bottom:40px}
+.panel-heading,.results-heading {display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:22px}
+button {font:inherit; border:1px solid #bfd4cc; border-radius:8px; color:#246252; background:#f4faf6; padding:9px 13px; font-size:13px; font-weight:650; cursor:pointer}
+button:hover {background:#e8f2ed}
+button:focus-visible,input:focus-visible,summary:focus-visible {outline:3px solid #21886d; outline-offset:3px}
+.inputs {display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px}
+.file-field {border:1px dashed #b9ccc5; background:#f8fbf9; padding:18px; border-radius:9px; min-width:0}
+.file-field label {display:block; font-size:13px; font-weight:750; margin-bottom:16px}
+.field-index {color:#408070; margin-right:8px}
+.optional {font-weight:500; color:#8a9992; font-size:11px; margin-left:4px}
+.file-field input {max-width:100%; font-size:12px; color:#596b68}
+.file-field small {display:block; color:#58736b; overflow-wrap:anywhere; margin-top:12px}
+.help {color:#71837c; font-size:12px; margin:19px 0 0}
+#error:not([hidden]) {background:#fff0ed; border:1px solid #efc5bb; color:#a12f1e; padding:12px; margin-bottom:0; border-radius:8px}
+.results-heading {margin-bottom:16px}
+#status {margin:0; color:#6a8178; font-size:13px}
+.metrics {display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-bottom:18px}
+.metric {padding:20px 22px}
+.metric-value {display:block; font-size:30px; font-weight:760; line-height:1.2; letter-spacing:-.04em}
+.metric-label {display:block; margin-top:7px; color:#658079; font-size:12px}
+.tree-grid {display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px}
+.tree-grid:empty {display:none}
+.tree-panel,.diff-panel {padding:24px; min-width:0}
+.tree-panel h3,.diff-panel h3 {margin:0 0 16px; font-size:16px}
+.muted {color:#798982; font-size:13px}
+.entry {border-top:1px solid #e8efea; padding-top:14px; margin-top:14px}
+.entry-meta {font-size:12px; color:#4f645d; overflow-wrap:anywhere; margin-bottom:8px}
+.entry-meta strong {display:block; color:#243d35}
+.entry-meta span {display:block}
+.delegate-list {margin:4px 0 5px 8px; padding-left:20px; border-left:1px solid #dce7e1; font-size:12px}
+details {margin:7px 0 7px 14px; border-left:2px solid #dce7e1; padding-left:10px}
+summary {cursor:pointer; padding:9px 10px; border-radius:6px; font-size:13px; overflow-wrap:anywhere; font-weight:630}
+summary:hover {background:#f0f5f2}
+details.added > summary,.change-row.added {background:#ecf9f2; color:#125e39}
+details.removed > summary,.change-row.removed {background:#fff3ed; color:#9d4726}
+details.unchanged > summary {color:#50665e}
+.node-details {font-size:11px; color:#7a8983; overflow-wrap:anywhere; padding:4px 10px 7px}
+.empty {padding:25px; color:#71837b; font-size:14px; text-align:center; margin:0 0 20px}
+#changes {margin-top:18px}
+.diff-groups {display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px}
+.change-row {padding:11px 13px; border-radius:7px; margin-bottom:8px; overflow-wrap:anywhere; font-size:12px}
+.change-row b {display:block; margin-bottom:3px}
+.change-row small {display:block; margin-top:3px; opacity:.8}
+footer {font-size:12px; margin-top:32px; padding-top:25px; border-top:1px solid #dce4df; color:#82938b}
+@media (max-width:750px) { main {padding:38px 16px} .topbar {padding:0 16px} .offline {font-size:10px} .inputs,.metrics,.tree-grid,.diff-groups {grid-template-columns:1fr} .import-panel,.tree-panel,.diff-panel {padding:18px} .panel-heading,.results-heading {align-items:flex-start; flex-direction:column; gap:8px} }
+@media (prefers-reduced-motion:reduce) {*,*::before,*::after {scroll-behavior:auto!important; transition:none!important}}

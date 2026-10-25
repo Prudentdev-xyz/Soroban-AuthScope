@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "authorizationCount": 1,
+  "entries": [
+    {
+      "credential": "sorobanCredentialsSourceAccount",
+      "authorizer": "transaction source",
+      "delegates": [],
+      "delegateTree": [],
+      "root": {
+        "kind": "contract",
+        "contract": "CADQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQOBYHA4DQP5KR",
+        "method": "approve",
+        "argumentsSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "children": []
+      }
+    }
+  ]
+}
