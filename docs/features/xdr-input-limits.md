@@ -1,0 +1,5 @@
+# Authorization XDR input budgets
+
+The decoder accepts at most 128 entries, at most 128 KiB decoded XDR per entry, maximum invocation/delegate depth 24 and maximum 2,000 nodes **per entry/tree**. The stand-alone `inspectBounded` adapter in `tools/xdr-hardening/` additionally enforces 512 KiB of aggregate base64 input and 2,000 invocation nodes/delegates across all entries. It does not change the public `inspect` entry point; callers requiring aggregate protection must invoke this adapter. The aggregate node check is post-decode, so it is not a hard allocation ceiling during decoding. The existing CLI imposes a 4 MiB input file ceiling.
+
+`tests/xdr-hardening.test.mjs` supplies 120 reproducible deterministic malformed inputs and isolates a pathological case in a subprocess with a 3-second watchdog. Timeouts are a last-resort guard, not evidence of a memory bound. Invalid inputs raise bounded classifications, not raw XDR or signature material. This is deterministic mutation coverage, not exhaustive XDR fuzzing or a formal memory-safety proof. Additional SDK-level parser limits would require upstream integration.
