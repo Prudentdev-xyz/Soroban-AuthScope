@@ -12,7 +12,7 @@ const HELP = [
   "  authscope --version",
   "",
   "Inputs: base64 SorobanAuthorizationEntry strings or stored Stellar RPC simulateTransaction JSON.",
-  "Exit codes: 0 success / unchanged; 1 changed scope; 2 invalid input / argument."
+  "Exit codes: 0 success / unchanged; 1 changed scope; 2 malformed input / argument; 3 unsupported or incomplete simulation."
 ].join("\n");
 function format(node: Invocation, level=0): string {
   return "  ".repeat(level) + "- " + node.contract + "." + node.method +
@@ -30,7 +30,9 @@ function display(snapshot: Snapshot): string {
   return lines.join("\n");
 }
 async function readSnapshot(path: string): Promise<Snapshot> {
-  const handle = await open(path, "r");
+  let handle;
+  try { handle = await open(path, "r"); }
+  catch { throw Error("Malformed input file"); }
   try {
     const stat = await handle.stat();
     if (!stat.isFile() || stat.size > 4 * 1024 * 1024) throw Error("Input file exceeds 4 MiB limit");
@@ -45,7 +47,10 @@ async function readSnapshot(path: string): Promise<Snapshot> {
       pieces.push(Buffer.from(buffer.subarray(0, bytesRead)));
     }
     const text = new TextDecoder("utf-8", {fatal:true}).decode(Buffer.concat(pieces));
-    return inspect(JSON.parse(text) as unknown);
+    let input: unknown;
+    try { input = JSON.parse(text) as unknown; }
+    catch { throw Error("Malformed JSON input"); }
+    return inspect(input);
   } finally { await handle.close(); }
 }
 export async function main(args: readonly string[]): Promise<number> {
@@ -72,9 +77,14 @@ export async function main(args: readonly string[]): Promise<number> {
       (result.changed ? result.changes.map(x => x.kind.toUpperCase() + " x" + x.count +
         " " + x.authorizer + ": " + x.path).join("\n") : "No authorization-scope changes."));
     return result.changed ? 1 : 0;
-  } catch {
+  } catch (error) {
     // Do not print caller input paths or SDK exceptions containing sensitive data.
-    console.error("AuthScope: Input could not be read or decoded. Check JSON and authorization XDR.");
+    const message = error instanceof Error ? error.message : "";
+    if (/Simulation has an error|no auth array|Expected an auth array or simulation results|Expected JSON authorization input/.test(message)) {
+      console.error("AuthScope: Unsupported or incomplete simulation; no authorization conclusion.");
+      return 3;
+    }
+    console.error("AuthScope: Malformed input or invalid authorization XDR.");
     return 2;
   }
 }
