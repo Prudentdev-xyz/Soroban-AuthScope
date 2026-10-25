@@ -1,0 +1,19 @@
+# Sample: copy to a consuming repository's .github/workflows/authscope.yml
+name: Soroban authorization scope regression
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  scope:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: auth
+        uses: SoraForge/Soroban-AuthScope/integrations/github-actions@main
+        with:
+          before: tests/auth/before.json
+          after: tests/auth/after.json
+          fail-on-change: "true"
+# The report JSON path is available from the action's report-path output.
+# Explicit artifact upload may disclose signer addresses and argument hashes.
